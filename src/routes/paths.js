@@ -1,4 +1,5 @@
 export const PATHS = {
+  home: "/",
   portfolio: "/portfolio",
 };
 
