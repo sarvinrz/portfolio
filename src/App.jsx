@@ -8,6 +8,7 @@ import {
 import PATHS from "./routes/paths";
 import { PortfolioContextProvider } from "./contexts/PortfolioContext";
 import { CoinsContextProvider } from "./contexts/CoinsContext";
+import ThemeContextProvider from "./contexts/ThemeContext";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const Portfolio = React.lazy(() => import("./pages/Portfolio"));
@@ -15,20 +16,22 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
-    <CoinsContextProvider>
-      <PortfolioContextProvider>
-        <Suspense fallback={() => <p>Loading...</p>}>
-          <Router basename="/">
-            <Routes>
-              <Route path="/" index element={<Home />} />
-              <Route path={PATHS.portfolio} element={<Portfolio />} />
-              <Route path="/404" element={<NotFound />} />
-              <Route path="*" element={<Navigate to="/404" />} />
-            </Routes>
-          </Router>
-        </Suspense>
-      </PortfolioContextProvider>
-    </CoinsContextProvider>
+    <ThemeContextProvider>
+      <CoinsContextProvider>
+        <PortfolioContextProvider>
+          <Suspense fallback={() => <p>Loading...</p>}>
+            <Router basename="/">
+              <Routes>
+                <Route path="/" index element={<Home />} />
+                <Route path={PATHS.portfolio} element={<Portfolio />} />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="*" element={<Navigate to="/404" />} />
+              </Routes>
+            </Router>
+          </Suspense>
+        </PortfolioContextProvider>
+      </CoinsContextProvider>
+    </ThemeContextProvider>
   );
 }
 

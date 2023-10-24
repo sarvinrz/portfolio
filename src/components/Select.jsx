@@ -7,7 +7,7 @@ const Select = function ({ name, value, options, setValue, loading }) {
       disabled={loading}
       value={value}
       onChange={setValue}
-      className="flex p-2 rounded-xl border border-indigo-300 shadow-sm"
+      className="flex p-2 rounded-xl border border-indigo-300 dark:bg-gray-800 shadow-sm"
     >
       <option value="">{!loading ? "Select..." : "Loading..."}</option>
       {options.map((opt) => (

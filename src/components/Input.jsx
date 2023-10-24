@@ -9,7 +9,7 @@ const Input = function (props) {
       name={name}
       placeholder={placeholder}
       onChange={setValue}
-      className="flex p-2 rounded-xl border border-indigo-300 shadow-sm"
+      className="flex p-2 rounded-xl border border-indigo-300 dark:bg-gray-800 shadow-sm"
     />
   );
 };

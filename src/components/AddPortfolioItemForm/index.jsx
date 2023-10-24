@@ -63,7 +63,7 @@ const AddPortfolioItemForm = function () {
       />
       <button
         type="submit"
-        className="p-2 text-center w-full rounded-xl shadow-sm bg-indigo-800 hover:bg-indigo-900 focus:ring focus:ring-indigo-500 text-indigo-200"
+        className="p-2 text-center w-full rounded-xl shadow-sm bg-indigo-800 dark:bg-gray-800 dark:hover:bg-gray-900 hover:bg-indigo-900 focus:ring focus:ring-indigo-500 text-indigo-200"
       >
         Add
       </button>

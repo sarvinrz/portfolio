@@ -44,18 +44,18 @@ const PortfolioItem = function ({ amount, price, symbol }) {
   return (
     <li>
       <div className="flex flex-row justify-between items-center p-4 rounded-lg bg-indigo-50/40">
-        <div className="bg-white my-auto rounded-xl px-6 py-2 text-xl font-bold w-auto self-start max-w-[120px] truncate">
+        <div className="bg-white my-auto rounded-xl px-6 py-2 text-xl dark:bg-gray-900  font-bold w-auto self-start max-w-[120px] truncate">
           {symbol}
         </div>
         <div className="flex flex-col space-y-2">
           <div className="flex flex-row space-x-2 rtl:space-x-reverse">
-            <span className="bg-white rounded-xl px-6 py-2 text-xs font-light whitespace-nowrap w-auto self-start max-w-[120px]">
+            <span className="bg-white rounded-xl px-6 py-2 text-xs dark:bg-gray-900 font-light whitespace-nowrap w-auto self-start max-w-[120px]">
               {(+price).toLocaleString("en-GB", {
                 maximumFractionDigits: 2,
               })}
               $USD
             </span>
-            <span className="bg-white rounded-xl px-6 py-2 text-xs font-light whitespace-nowrap w-auto self-start max-w-[120px]">
+            <span className="bg-white rounded-xl px-6 py-2 text-xs dark:bg-gray-900 font-light whitespace-nowrap w-auto self-start max-w-[120px]">
               {
                 +amount.toLocaleString("en-GB", {
                   maximumFractionDigits: 2,
@@ -65,7 +65,7 @@ const PortfolioItem = function ({ amount, price, symbol }) {
             </span>
           </div>
           <span
-            className={`bg-white ${
+            className={`bg-white dark:bg-gray-900  ${
               percentage < 0 ? "text-red-500" : "text-emerald-500"
             } rounded-xl px-6 py-2 text-xs font-light whitespace-nowrap w-auto self-end max-w-[120px]`}
           >

@@ -5,7 +5,7 @@ import Header from "../components/Header";
 
 const MainLayout = function ({ children }) {
   return (
-    <div className="flex flex-col justify-between text-white bg-indigo-700 min-h-screen w-full">
+    <div className="flex flex-col justify-between text-white bg-indigo-700 dark:bg-gray-800 min-h-screen w-full transition duration-500">
       <Header />
       <div className="flex flex-col justify-center items-center h-full">
         {children}
