@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import Logo from "./Logo";
 import Navbar from "./Navbar";
 import useTheme from "../../hooks/useTheme";
@@ -6,7 +6,7 @@ import { FaRegMoon } from "react-icons/fa";
 import { BsSun } from "react-icons/bs";
 
 const Header = function () {
-  const { mode, setMode } = useTheme();
+  const { mode, setMode, setLanguage } = useTheme();
 
   const onClickHandler = useCallback(() => {
     if (mode === "light") {
