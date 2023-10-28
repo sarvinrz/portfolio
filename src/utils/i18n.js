@@ -30,7 +30,6 @@ i18n.use(initReactI18next).init({
     useSuspense: true,
   },
   lng: "en",
-  debug: true,
 });
 
 export default i18n;

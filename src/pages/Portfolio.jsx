@@ -1,31 +1,10 @@
-import React, { useCallback, useEffect } from "react";
-import { BASE_URL } from "../config";
+import React from "react";
 import PortfolioList from "../components/PortfolioList";
-import useCoins from "../hooks/useCoins";
 import AddPortfolioItemForm from "../components/AddPortfolioItemForm";
 import { useTranslation } from "react-i18next";
 
 const Portfolio = function () {
-  const { setCoins } = useCoins();
   const { t } = useTranslation();
-
-  const fetchCoinsData = useCallback(async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/v1/assets`, {
-        headers: { "X-CoinAPI-Key": "ECDDB7CA-0DB5-48ED-9726-88DB6B26BB82" },
-      });
-      const parsedData = await response.json();
-
-      setCoins(parsedData.slice(0, 10));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [setCoins]);
-
-  useEffect(() => {
-    fetchCoinsData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="flex container mx-auto max-w-4xl flex-row gap-4 justify-center items-start w-full">

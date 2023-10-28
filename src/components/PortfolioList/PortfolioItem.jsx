@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import useCoins from "../../hooks/useCoins";
+import { useQuery } from "react-query";
+import fetcher from "../../utils/fetcher";
 
 const PortfolioItem = function ({ amount, price, symbol }) {
-  const { coins } = useCoins();
+  const { data: coins } = useQuery(["/v1/assets"], fetcher);
 
   const coinValue = useMemo(() => {
     if (coins) {

@@ -1,10 +1,11 @@
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useReducer, useMemo } from "react";
 import Select from "../Select";
 import Input from "../Input";
 import formReducer from "../../reducers/formReducer";
 import usePortfolio from "../../hooks/usePortfolio";
-import useCoins from "../../hooks/useCoins";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
+import fetcher from "../../utils/fetcher";
 
 const initialState = {
   symbol: "",
@@ -16,8 +17,12 @@ const AddPortfolioItemForm = function () {
   const [formState, dispatch] = useReducer(formReducer, initialState);
 
   const { addItem } = usePortfolio();
-  const { coins } = useCoins();
   const { t } = useTranslation();
+  const { data: coins, isLoading } = useQuery(["/v1/assets"], fetcher);
+
+  const slicedCoins = useMemo(() => {
+    if (coins) return coins.slice(0, 10);
+  }, [coins]);
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -45,10 +50,12 @@ const AddPortfolioItemForm = function () {
     <form onSubmit={onSubmitHandler} className="flex flex-col space-y-2">
       <Select
         name="symbol"
-        loading={!coins || coins.length === 0}
+        loading={isLoading}
         setValue={handleInputChange}
         options={
-          coins ? coins.map((c) => ({ value: c.asset_id, label: c.name })) : []
+          slicedCoins
+            ? slicedCoins.map((c) => ({ value: c.asset_id, label: c.name }))
+            : []
         }
       />
       <Input
