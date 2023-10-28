@@ -1,14 +1,16 @@
 import React from "react";
 import usePortfolio from "../../hooks/usePortfolio";
 import PortfolioItem from "./PortfolioItem";
+import { useTranslation } from "react-i18next";
 
 const PortfolioList = function () {
   const { portfolio } = usePortfolio();
+  const { t } = useTranslation();
 
   if (portfolio?.length === 0) {
     return (
       <div className="flex flex-row justify-center items-center">
-        There are no items in your portfolio.
+        {t("There are no items in your portfolio.")}
       </div>
     );
   }

@@ -3,9 +3,11 @@ import { BASE_URL } from "../config";
 import PortfolioList from "../components/PortfolioList";
 import useCoins from "../hooks/useCoins";
 import AddPortfolioItemForm from "../components/AddPortfolioItemForm";
+import { useTranslation } from "react-i18next";
 
 const Portfolio = function () {
   const { setCoins } = useCoins();
+  const { t } = useTranslation();
 
   const fetchCoinsData = useCallback(async () => {
     try {
@@ -30,9 +32,9 @@ const Portfolio = function () {
       <div className="flex flex-row space-x-2 rtl:space-x-reverse items-center md:w-1/4 w-full">
         <div className="flex flex-col bg-indigo-200 text-indigo-800 dark:bg-gray-700  dark:text-white shadow-xl rounded-md p-4 space-y-4">
           <span className="flex flex-col space-y-1">
-            <h3>Add New Asset</h3>
+            <h3>{t("Add New Asset")}</h3>
             <p className="text-sm font-light opacity-50">
-              You can add new assets here.
+              {t("You can add new assets here.")}
             </p>
           </span>
 
@@ -40,7 +42,7 @@ const Portfolio = function () {
         </div>
       </div>
       <div className="flex flex-col bg-indigo-200 text-indigo-800  dark:bg-gray-700 dark:text-white shadow-xl rounded-md p-4 md:w-3/4 w-full">
-        <h3 className="text-xl font-bold">Portfolio</h3>
+        <h3 className="text-xl font-bold">{t("Portfolio")}</h3>
 
         <PortfolioList />
       </div>

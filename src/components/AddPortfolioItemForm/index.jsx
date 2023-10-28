@@ -4,6 +4,7 @@ import Input from "../Input";
 import formReducer from "../../reducers/formReducer";
 import usePortfolio from "../../hooks/usePortfolio";
 import useCoins from "../../hooks/useCoins";
+import { useTranslation } from "react-i18next";
 
 const initialState = {
   symbol: "",
@@ -16,6 +17,7 @@ const AddPortfolioItemForm = function () {
 
   const { addItem } = usePortfolio();
   const { coins } = useCoins();
+  const { t } = useTranslation();
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -65,7 +67,7 @@ const AddPortfolioItemForm = function () {
         type="submit"
         className="p-2 text-center w-full rounded-xl shadow-sm bg-indigo-800 dark:bg-gray-800 dark:hover:bg-gray-900 hover:bg-indigo-900 focus:ring focus:ring-indigo-500 text-indigo-200"
       >
-        Add
+        {t("Add")}
       </button>
     </form>
   );

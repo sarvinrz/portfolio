@@ -1,8 +1,10 @@
 import { NavLink } from "react-router-dom";
 import React from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const NavbarItem = function ({ to, title }) {
+  const { t } = useTranslation();
   return (
     <li>
       <NavLink
@@ -15,7 +17,7 @@ const NavbarItem = function ({ to, title }) {
         }
         to={to}
       >
-        {title}
+        {t(title)}
       </NavLink>
     </li>
   );
