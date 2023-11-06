@@ -45,7 +45,7 @@ const Header = function () {
 
   return (
     <header className="flex flex-row w-full p-4">
-      <nav className="flex flex-row justify-between mx-auto items-center w-full container max-w-5xl">
+      <nav className="flex flex-row justify-between mx-auto items-center w-full container py-2 px-4">
         <Logo />
         <Navbar />
         <div className="flex flex-row items-center space-x-4 rtl:space-x-reverse">
