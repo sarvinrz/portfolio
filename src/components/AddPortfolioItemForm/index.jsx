@@ -18,7 +18,7 @@ const AddPortfolioItemForm = function () {
 
   const { addItem } = usePortfolio();
   const { t } = useTranslation();
-  const { data: coins, isLoading } = useQuery(["/v1/assets"], fetcher);
+  const { data: coins, isLoading } = useQuery(["/v2/tokens"], fetcher);
 
   const slicedCoins = useMemo(() => {
     if (coins) return coins.slice(0, 10);
@@ -54,7 +54,7 @@ const AddPortfolioItemForm = function () {
         setValue={handleInputChange}
         options={
           slicedCoins
-            ? slicedCoins.map((c) => ({ value: c.asset_id, label: c.name }))
+            ? slicedCoins.map((c) => ({ value: c.symbol, label: c.name }))
             : []
         }
       />

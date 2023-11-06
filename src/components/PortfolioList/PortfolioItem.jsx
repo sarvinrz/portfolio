@@ -4,19 +4,24 @@ import { useQuery } from "react-query";
 import fetcher from "../../utils/fetcher";
 
 const PortfolioItem = function ({ amount, price, symbol }) {
-  const { data: coins } = useQuery(["/v1/assets"], fetcher);
+  const { data: coins } = useQuery(["/v2/tokens"], fetcher);
+  const { data: pairs } = useQuery("/v2/pairs", fetcher);
 
   const coinValue = useMemo(() => {
-    if (coins) {
-      const currentCoin = coins.find((item) => item.asset_id === symbol);
+    if (coins && pairs) {
+      const currentCoin = coins.find((item) => item.symbol === symbol);
 
       if (currentCoin) {
-        const usdPrice = currentCoin["price_usd"];
+        const usdPrice = pairs.find(
+          (p) =>
+            p.name.split("/")[0] === currentCoin.symbol &&
+            p.name.split("/")[1] === "USDT"
+        ).lastPrice;
 
         return Number(usdPrice) * Number(amount);
       }
     }
-  }, [amount, coins, symbol]);
+  }, [amount, coins, pairs, symbol]);
 
   const boughtValue = useMemo(() => {
     return Number(amount) * Number(price);
