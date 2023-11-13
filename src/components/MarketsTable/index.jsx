@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import React from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "react-query";
 import fetcher from "../../utils/fetcher";
 import {
@@ -12,11 +12,18 @@ import {
 const columnHelper = createColumnHelper();
 
 const MarketsTable = function () {
-  const { data: coins, isLoading } = useQuery(["/v2/tokens"], fetcher);
+  const { data: coins } = useQuery(["/v2/tokens"], fetcher);
   const { data: pairs } = useQuery(["/v2/pairs"], fetcher);
+
+  const tableData = useMemo(() => {
+    if (coins) {
+      return coins.filter((c) => !["USDT", "TMN"].includes(c.symbol));
+    }
+  }, [coins]);
 
   const columns = [
     columnHelper.accessor("name", {
+      id: "name",
       cell: (info) => (
         <div className="flex flex-row items-center justify-start space-x-2 rtl:space-x-reverse">
           <div className="flex flex-row justify-center items-center rounded-full p-1 bg-indigo-500">
@@ -26,24 +33,32 @@ const MarketsTable = function () {
             />
           </div>
 
-          <p className="text-sm tracking-widest font-semibold">
+          <p className="text-lg uppercase tracking-widest font-light">
             {info.getValue()}
           </p>
         </div>
       ),
       header: () => <p>Cryptocurrency</p>,
     }),
-    columnHelper.accessor("convertRateInBase", {
+    columnHelper.accessor("symbol", {
       id: "convertRateInBase",
-      cell: (info) => (
-        <p>
-          $
-          {Number(info.getValue()).toLocaleString(i18next.language, {
-            maximumFractionDigits: 6,
-          })}
-        </p>
-      ),
-      header: () => <p>Price (USD)</p>,
+      cell: (info) => {
+        const pair = pairs?.find(
+          (p) =>
+            p.name.split("/")[0] === info.getValue() &&
+            p.name.split("/")[1] === "USDT"
+        );
+
+        return (
+          <p>
+            $
+            {Number(pair?.lastPrice).toLocaleString(i18next.language, {
+              maximumFractionDigits: 6,
+            })}
+          </p>
+        );
+      },
+      header: () => <p>Price (USDT)</p>,
     }),
     columnHelper.accessor("symbol", {
       header: () => "24h Change (%)",
@@ -66,26 +81,33 @@ const MarketsTable = function () {
         );
       },
     }),
-    columnHelper.accessor("volume_1day_usd", {
-      cell: (info) => (
-        <p>
-          $
-          {Number(info.getValue()).toLocaleString(i18next.language, {
-            maximumFractionDigits: 6,
-          })}
-        </p>
-      ),
-      header: () => <span>Visits</span>,
+    columnHelper.accessor("symbol", {
+      cell: (info) => {
+        const pair = pairs?.find(
+          (p) =>
+            p.name.split("/")[0] === info.getValue() &&
+            p.name.split("/")[1] === "USDT"
+        );
+        return (
+          <p>
+            $
+            {Number(pair?.vol24).toLocaleString(i18next.language, {
+              maximumFractionDigits: 6,
+            })}
+          </p>
+        );
+      },
+      header: () => <span>Volume</span>,
     }),
   ];
 
   const table = useReactTable({
-    data: coins ?? [],
+    data: tableData ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (isLoading) {
+  if (!coins && !pairs) {
     return <p>Loading...</p>;
   }
 
