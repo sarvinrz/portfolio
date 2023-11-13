@@ -8,9 +8,9 @@ export const ThemeContext = createContext({
 });
 
 const ThemeContextProvider = function ({ children }) {
-  const [mode, setMode] = useState("light");
-  const [direction, setDirection] = useState("ltr");
-  const [language, setLanguage] = useState("en");
+  const [mode, setMode] = useState();
+  const [direction, setDirection] = useState();
+  const [language, setLanguage] = useState();
 
   return (
     <ThemeContext.Provider

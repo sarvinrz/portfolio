@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import Logo from "./Logo";
 import Navbar from "./Navbar";
 import useTheme from "../../hooks/useTheme";
@@ -11,11 +11,9 @@ const Header = function () {
   const { mode, setMode, language, setLanguage, setDirection } = useTheme();
 
   const {
-    i18n: { changeLanguage, language: i18nLanguage },
+    i18n: { changeLanguage },
     t,
   } = useTranslation();
-
-  console.log(language, i18nLanguage);
 
   const changeDirection = useCallback(
     (direction) => {
@@ -28,20 +26,53 @@ const Header = function () {
     (language) => {
       setLanguage(language);
       changeLanguage(language);
-      changeDirection(language === "en" ? "ltr" : "rtl");
+      const direction = language === "en" ? "ltr" : "rtl";
+      changeDirection(direction);
+      localStorage.setItem("language", language);
+      localStorage.setItem("direction", direction);
     },
     [changeDirection, changeLanguage, setLanguage]
   );
 
-  const onClickHandler = useCallback(() => {
+  const onThemeModeChangeHandler = useCallback(() => {
     if (mode === "light") {
       setMode("dark");
+      localStorage.setItem("mode", "dark");
       document.documentElement.classList.add("dark");
     } else {
       setMode("light");
+      localStorage.setItem("mode", "light");
       document.documentElement.classList.remove("dark");
     }
   }, [mode, setMode]);
+
+  useEffect(() => {
+    setDirection(
+      localStorage.getItem("direction")
+        ? localStorage.getItem("direction")
+        : "ltr"
+    );
+    setMode(
+      localStorage.getItem("mode") ? localStorage.getItem("mode") : "light"
+    );
+
+    if (localStorage.getItem("mode") === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    setLanguage(
+      localStorage.getItem("language") ? localStorage.getItem("language") : "en"
+    );
+    localStorage.getItem("language") ? localStorage.getItem("language") : "en";
+
+    if (localStorage.getItem("language") === "fa") {
+      changeLanguage("fa");
+    } else {
+      changeLanguage("en");
+    }
+  }, [changeLanguage, setDirection, setLanguage, setMode]);
 
   return (
     <header className="flex flex-row w-full p-4">
@@ -49,7 +80,7 @@ const Header = function () {
         <Logo />
         <Navbar />
         <div className="flex flex-row items-center space-x-4 rtl:space-x-reverse">
-          <button onClick={onClickHandler}>
+          <button onClick={onThemeModeChangeHandler}>
             {mode === "light" ? <FaRegMoon /> : <BsSun />}
           </button>
           <button className="flex flex-col group relative">
