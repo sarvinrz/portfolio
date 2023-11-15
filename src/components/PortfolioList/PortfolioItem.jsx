@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useQuery } from "react-query";
 import fetcher from "../../utils/fetcher";
+import i18next from "i18next";
 
 const PortfolioItem = function ({ amount, price, symbol }) {
   const { data: coins } = useQuery(["/v2/tokens"], fetcher);
@@ -56,17 +57,15 @@ const PortfolioItem = function ({ amount, price, symbol }) {
         <div className="flex flex-col space-y-2">
           <div className="flex flex-row space-x-2 rtl:space-x-reverse">
             <span className="bg-white rounded-xl px-6 py-2 text-xs dark:bg-gray-900 font-light whitespace-nowrap w-auto self-start max-w-[120px]">
-              {(+price).toLocaleString("en-GB", {
+              {(+price).toLocaleString(i18next.language, {
                 maximumFractionDigits: 2,
               })}
               $USD
             </span>
             <span className="bg-white rounded-xl px-6 py-2 text-xs dark:bg-gray-900 font-light whitespace-nowrap w-auto self-start max-w-[120px]">
-              {
-                +amount.toLocaleString("en-GB", {
-                  maximumFractionDigits: 2,
-                })
-              }
+              {(+amount).toLocaleString(i18next.language, {
+                maximumFractionDigits: 2,
+              })}
               {symbol}
             </span>
           </div>
@@ -76,7 +75,7 @@ const PortfolioItem = function ({ amount, price, symbol }) {
             } rounded-xl px-6 py-2 text-xs font-light whitespace-nowrap w-auto self-end max-w-[120px]`}
           >
             {sign}{" "}
-            {Math.abs(percentage).toLocaleString("en-GB", {
+            {Math.abs(percentage).toLocaleString(i18next.language, {
               maximumFractionDigits: 2,
             })}{" "}
             %

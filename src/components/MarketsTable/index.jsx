@@ -2,6 +2,7 @@ import i18next from "i18next";
 import React, { useMemo } from "react";
 import { useQuery } from "react-query";
 import fetcher from "../../utils/fetcher";
+import { useTranslation } from "react-i18next";
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,6 +16,8 @@ const MarketsTable = function () {
   const { data: coins } = useQuery(["/v2/tokens"], fetcher);
   const { data: pairs } = useQuery(["/v2/pairs"], fetcher);
 
+  const { t } = useTranslation();
+
   const tableData = useMemo(() => {
     if (coins) {
       return coins.filter((c) => !["USDT", "TMN"].includes(c.symbol));
@@ -26,7 +29,7 @@ const MarketsTable = function () {
       id: "name",
       cell: (info) => (
         <div className="flex flex-row items-center justify-start space-x-2 rtl:space-x-reverse">
-          <div className="flex flex-row justify-center items-center rounded-full p-1 bg-indigo-500">
+          <div className="flex flex-row justify-center items-center rounded-full p-1 bg-indigo-500 dark:bg-gray-800">
             <img
               className="w-8 h-8"
               src={`https://api.exnovin.io/static-contents/images/icons/${info.row.original.symbol}_64x64.png`}
@@ -38,7 +41,7 @@ const MarketsTable = function () {
           </p>
         </div>
       ),
-      header: () => <p>Cryptocurrency</p>,
+      header: () => <p>{t("Cryptocurrency")}</p>,
     }),
     columnHelper.accessor("symbol", {
       id: "convertRateInBase",
@@ -58,10 +61,10 @@ const MarketsTable = function () {
           </p>
         );
       },
-      header: () => <p>Price (USDT)</p>,
+      header: () => <p>{t("Price (USDT)")}</p>,
     }),
     columnHelper.accessor("symbol", {
-      header: () => "24h Change (%)",
+      header: () => t("24h Change (%)"),
       cell: (info) => {
         const pair = pairs?.find(
           (p) =>
@@ -70,13 +73,16 @@ const MarketsTable = function () {
         );
         return (
           <p
-            className={`px-4 py-1 text-sm rounded-full bg-opacity-70 w-16 text-center ${
+            className={` py-1 text-sm rounded-full bg-opacity-70 w-16 text-center ${
               pair?.change24Percentage >= 0
                 ? "bg-green-500 text-green-700"
                 : "bg-red-500 text-red-800"
             }`}
           >
-            {pair?.change24Percentage}%
+            {Number(pair?.change24Percentage).toLocaleString(i18next.language, {
+              maximumFractionDigits: 2,
+            })}
+            %
           </p>
         );
       },
@@ -97,7 +103,7 @@ const MarketsTable = function () {
           </p>
         );
       },
-      header: () => <span>Volume</span>,
+      header: () => <span>{t("Volume")}</span>,
     }),
   ];
 
@@ -117,7 +123,7 @@ const MarketsTable = function () {
         className="w-full text-black rounded-lg shadow-sm"
         {...getCoreRowModel()}
       >
-        <thead className="bg-gray-100 rounded-t-md">
+        <thead className="bg-gray-100 rounded-t-md dark:bg-gray-600 dark:text-gray-200 ">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
@@ -138,7 +144,9 @@ const MarketsTable = function () {
             <tr
               key={row.id}
               className={`${index === coins.length - 1 && "rounded-b-md"} ${
-                index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                index % 2 === 0
+                  ? "bg-white dark:bg-gray-500 dark:text-gray-200"
+                  : "bg-gray-100 dark:bg-gray-600 dark:text-gray-200"
               } hover:bg-gray-50`}
             >
               {row.getVisibleCells().map((cell) => (

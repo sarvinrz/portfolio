@@ -7,5 +7,9 @@
   "Add": "افزودن",
   "Select": "انتخاب",
   "Price": "قیمت",
-  "There are no items in your portfolio.": "هیچ موردی در سبد شما وجود ندارد."
+  "There are no items in your portfolio.": "هیچ موردی در سبد شما وجود ندارد.",
+  "Cryptocurrency": "ارز دیجیتال",
+  "Price (USDT)": "قیمت(دلار)",
+  "24h Change (%)": "تغییرات در ۲۴ ساعت اخیر",
+  "Volume": "حجم"
 }

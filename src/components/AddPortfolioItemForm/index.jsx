@@ -6,6 +6,7 @@ import usePortfolio from "../../hooks/usePortfolio";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import fetcher from "../../utils/fetcher";
+import i18next from "i18next";
 
 const initialState = {
   symbol: "",
@@ -61,13 +62,17 @@ const AddPortfolioItemForm = function () {
       <Input
         name="price"
         placeholder="Price"
-        value={formState.price}
+        value={Number(formState.price).toLocaleString(i18next.language, {
+          maximumFractionDigits: 2,
+        })}
         setValue={handleInputChange}
       />
       <Input
         name="amount"
         placeholder="Amount"
-        value={formState.amount}
+        value={Number(formState.amount).toLocaleString(i18next.language, {
+          maximumFractionDigits: 6,
+        })}
         setValue={handleInputChange}
       />
       <button
