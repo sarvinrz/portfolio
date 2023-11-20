@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useCallback, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import formReducer from "../reducers/formReducer";
 import Input from "../components/Input";
-import { useNavigate } from "react-router-dom";
 import PATHS from "../routes/paths";
 
 const initialState = {
@@ -16,19 +16,15 @@ const Login = function () {
 
   const navigate = useNavigate();
 
+  const [formState, dispatch] = useReducer(formReducer, initialState);
+
   const mutation = useMutation({
     mutationFn: (credentials) => {
       return axios.post("https://api.zarindax.ir/v2/auth/ott", credentials);
     },
+    onSuccess: () =>
+      navigate(PATHS.otp, { state: { username: formState?.username } }),
   });
-
-  const [formState, dispatch] = useReducer(formReducer, initialState);
-
-  useEffect(() => {
-    if (mutation.isSuccess && formState?.username) {
-      navigate(PATHS.otp, { state: { username: formState?.username } });
-    }
-  }, [formState?.username, mutation.isSuccess, navigate]);
 
   const onSubmitHandler = useCallback(
     (e) => {

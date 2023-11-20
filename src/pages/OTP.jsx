@@ -3,7 +3,9 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PinInput from "react-pin-input";
 import { useMutation } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import PATHS from "../routes/paths";
 
 const OTP = function () {
   const { t } = useTranslation();
@@ -11,9 +13,18 @@ const OTP = function () {
   const [pin, setPin] = useState();
   const { state } = useLocation();
 
+  const navigate = useNavigate();
+
+  const { setIsLoggedIn } = useAuth();
+
   const mutation = useMutation({
     mutationFn: (credentials) => {
       return axios.post("https://api.zarindax.ir/v2/auth/login", credentials);
+    },
+    onSuccess: ({ data }) => {
+      navigate(PATHS.portfolio);
+      localStorage.setItem(data.token);
+      if (data.token) setIsLoggedIn(true);
     },
   });
 
