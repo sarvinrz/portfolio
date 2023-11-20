@@ -20,6 +20,7 @@ const Home = React.lazy(() => import("./pages/Home"));
 const Portfolio = React.lazy(() => import("./pages/Portfolio"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Login = React.lazy(() => import("./pages/Login"));
+const OTP = React.lazy(() => import("./pages/OTP"));
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                       <Route path="/" index element={<Home />} />
                       <Route path={PATHS.portfolio} element={<Portfolio />} />
                       <Route path={PATHS.login} element={<Login />} />
+                      <Route path={PATHS.otp} element={<OTP />} />
                       <Route path="/404" element={<NotFound />} />
                       <Route path="*" element={<Navigate to="/404" />} />
                     </Routes>
