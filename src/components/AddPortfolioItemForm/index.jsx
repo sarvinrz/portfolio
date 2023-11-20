@@ -6,7 +6,8 @@ import usePortfolio from "../../hooks/usePortfolio";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import fetcher from "../../utils/fetcher";
-import i18next from "i18next";
+import toEnglishDigits from "../../utils/toEnglishDigits";
+import toFarsiNumber from "../../utils/toFarsiDigits";
 
 const initialState = {
   symbol: "",
@@ -27,7 +28,12 @@ const AddPortfolioItemForm = function () {
 
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
-    dispatch({ type: "UPDATE_FIELD", field: name, value });
+
+    dispatch({
+      type: "UPDATE_FIELD",
+      field: name,
+      value: toEnglishDigits(value),
+    });
   }, []);
 
   const onSubmitHandler = useCallback(
@@ -62,17 +68,13 @@ const AddPortfolioItemForm = function () {
       <Input
         name="price"
         placeholder="Price"
-        value={Number(formState.price).toLocaleString(i18next.language, {
-          maximumFractionDigits: 2,
-        })}
+        value={toFarsiNumber(formState.price)}
         setValue={handleInputChange}
       />
       <Input
         name="amount"
         placeholder="Amount"
-        value={Number(formState.amount).toLocaleString(i18next.language, {
-          maximumFractionDigits: 6,
-        })}
+        value={toFarsiNumber(formState.amount)}
         setValue={handleInputChange}
       />
       <button
