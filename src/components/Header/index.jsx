@@ -6,6 +6,8 @@ import { FaRegMoon } from "react-icons/fa";
 import { BsSun } from "react-icons/bs";
 import { RiEarthLine, RiMenu2Line } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import PATHS from "../../routes/paths";
 
 const Header = function () {
   const { mode, setMode, language, setLanguage, setDirection } = useTheme();
@@ -93,6 +95,12 @@ const Header = function () {
           setIsSidebarOpen={setIsSidebarOpen}
         />
         <div className="flex flex-row items-center space-x-4 rtl:space-x-reverse">
+          <Link
+            to={PATHS.login}
+            className="flex flex-row bg-white rounded-lg p-2 text-indigo-500 font-bold dark:text-white dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center w-24"
+          >
+            {t("Login")}
+          </Link>
           <button onClick={onThemeModeChangeHandler}>
             {mode === "light" ? <FaRegMoon /> : <BsSun />}
           </button>

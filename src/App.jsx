@@ -19,6 +19,7 @@ const queryClient = new QueryClient();
 const Home = React.lazy(() => import("./pages/Home"));
 const Portfolio = React.lazy(() => import("./pages/Portfolio"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
+const Login = React.lazy(() => import("./pages/Login"));
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                     <Routes>
                       <Route path="/" index element={<Home />} />
                       <Route path={PATHS.portfolio} element={<Portfolio />} />
+                      <Route path={PATHS.login} element={<Login />} />
                       <Route path="/404" element={<NotFound />} />
                       <Route path="*" element={<Navigate to="/404" />} />
                     </Routes>
