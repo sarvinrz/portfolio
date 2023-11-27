@@ -8,9 +8,12 @@ import { RiEarthLine, RiMenu2Line } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import PATHS from "../../routes/paths";
+import useAuth from "../../hooks/useAuth";
 
 const Header = function () {
   const { mode, setMode, language, setLanguage, setDirection } = useTheme();
+
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -80,6 +83,13 @@ const Header = function () {
     }
   }, [changeLanguage, setDirection, setLanguage, setMode]);
 
+  const logoutHandler = useCallback(() => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+  }, [setIsLoggedIn]);
+
+  console.log(isLoggedIn);
+
   return (
     <header className="flex flex-row w-full p-4">
       <nav className="flex flex-row justify-between mx-auto items-center w-full container py-2 px-4">
@@ -95,12 +105,21 @@ const Header = function () {
           setIsSidebarOpen={setIsSidebarOpen}
         />
         <div className="flex flex-row items-center space-x-4 rtl:space-x-reverse">
-          <Link
-            to={PATHS.login}
-            className="flex flex-row bg-white rounded-lg p-2 text-indigo-500 font-bold dark:text-white dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center w-24"
-          >
-            {t("Login")}
-          </Link>
+          {isLoggedIn ? (
+            <button
+              className="flex flex-row bg-red-500 rounded-lg p-2 text-white font-bold dark:text-white dark:bg-red-800 hover:bg-red-700 dark:hover:bg-red-700 justify-center w-24"
+              onClick={logoutHandler}
+            >
+              {t("Logout")}
+            </button>
+          ) : (
+            <Link
+              to={PATHS.login}
+              className="flex flex-row bg-white rounded-lg p-2 text-indigo-500 font-bold dark:text-white dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center w-24"
+            >
+              {t("Login")}
+            </Link>
+          )}
           <button onClick={onThemeModeChangeHandler}>
             {mode === "light" ? <FaRegMoon /> : <BsSun />}
           </button>

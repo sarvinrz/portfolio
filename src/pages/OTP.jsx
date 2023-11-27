@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PinInput from "react-pin-input";
 import { useMutation } from "react-query";
@@ -17,14 +17,17 @@ const OTP = function () {
 
   const { setIsLoggedIn } = useAuth();
 
+  const [seconds, setSeconds] = useState(59);
+  const [minutes, setMinutes] = useState(1);
+
   const mutation = useMutation({
     mutationFn: (credentials) => {
       return axios.post("https://api.zarindax.ir/v2/auth/login", credentials);
     },
     onSuccess: ({ data }) => {
       navigate(PATHS.portfolio);
-      localStorage.setItem(data.token);
-      if (data.token) setIsLoggedIn(true);
+      localStorage.setItem("token", data.token);
+      setIsLoggedIn(true);
     },
   });
 
@@ -36,7 +39,31 @@ const OTP = function () {
     [mutation, pin, state.username]
   );
 
-  console.log(pin);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [seconds]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (minutes > 0) {
+        setMinutes(minutes - 1);
+        setSeconds(59);
+      } else {
+        clearInterval(interval);
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [minutes]);
+
   return (
     <form
       onSubmit={onSubmitHandler}
@@ -53,6 +80,11 @@ const OTP = function () {
           direction: "ltr",
         }}
       />
+      <span className="flex flex-row items-center p-2 rounded-xl space-x-2 rtl:space-x-reverse text-indigo-500 bg-white dark:bg-gray-900 dark:text-white">
+        <p className="text-xl font-light">{minutes}</p>
+        <p className="text-lg font-bold">:</p>
+        <p className="text-xl font-light">{seconds}</p>
+      </span>
       <button
         type="submit"
         className="p-4 text-center w-full rounded-xl shadow-sm text-2xl dark:text-white bg-indigo-800 dark:bg-gray-800 dark:hover:bg-gray-900 hover:bg-indigo-900 focus:ring-indigo-500 text-indigo-200"

@@ -2,10 +2,12 @@ import axios from "axios";
 import React, { useCallback, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import formReducer from "../reducers/formReducer";
 import Input from "../components/Input";
 import PATHS from "../routes/paths";
+import { toast } from "react-toastify";
+import useTheme from "../hooks/useTheme";
 
 const initialState = {
   username: "",
@@ -13,17 +15,30 @@ const initialState = {
 
 const Login = function () {
   const { t } = useTranslation();
+  const { language } = useTheme();
 
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const [formState, dispatch] = useReducer(formReducer, initialState);
 
   const mutation = useMutation({
     mutationFn: (credentials) => {
-      return axios.post("https://api.zarindax.ir/v2/auth/ott", credentials);
+      return axios.post("https://api.zarindax.ir/v2/auth/ott", credentials, {
+        headers: {
+          "Accept-Language": language,
+        },
+      });
     },
-    onSuccess: () =>
-      navigate(PATHS.otp, { state: { username: formState?.username } }),
+    onSuccess: () => {
+      navigate(PATHS.otp, { state: { username: formState?.username } });
+      toast(t("The code has been sent."), { type: "success" });
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["tokens"] }),
+    onError: (error) => {
+      toast(error.response.data.message, { type: "error" });
+    },
   });
 
   const onSubmitHandler = useCallback(

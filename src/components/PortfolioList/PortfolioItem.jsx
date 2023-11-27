@@ -5,7 +5,10 @@ import fetcher from "../../utils/fetcher";
 import i18next from "i18next";
 
 const PortfolioItem = function ({ amount, price, symbol }) {
-  const { data: coins } = useQuery(["/v2/tokens"], fetcher);
+  const { data: coins } = useQuery({
+    queryKey: ["tokens"],
+    queryFn: () => fetcher("/v2/tokens"),
+  });
   const { data: pairs } = useQuery("/v2/pairs", fetcher);
 
   const coinValue = useMemo(() => {

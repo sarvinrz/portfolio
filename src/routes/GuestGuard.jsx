@@ -3,18 +3,17 @@ import PropTypes from "prop-types";
 import useAuth from "../hooks/useAuth";
 import PATHS from "./paths";
 
-const AuthGuard = function ({ children }) {
+const GuestGuard = function ({ children }) {
   const { isLoggedIn } = useAuth();
 
-  if (!isLoggedIn) {
-    return <Navigate to={PATHS.login} />;
+  if (isLoggedIn) {
+    return <Navigate to={PATHS.home} />;
   }
-
   return <>{children}</>;
 };
 
-AuthGuard.propTypes = {
+GuestGuard.propTypes = {
   children: PropTypes.node,
 };
 
-export default AuthGuard;
+export default GuestGuard;
