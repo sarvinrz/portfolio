@@ -18,8 +18,8 @@ const OTP = function () {
 
   const { setIsLoggedIn } = useAuth();
 
-  const [seconds, setSeconds] = useState(5);
-  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(59);
+  const [minutes, setMinutes] = useState(1);
 
   const loginMutation = useMutation({
     mutationFn: (credentials) => {
