@@ -7,7 +7,7 @@ const AuthGuard = function ({ children }) {
   const { isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
-    return <r to={PATHS.login} />;
+    return <Navigate to={PATHS.login} />;
   }
 
   return <>{children}</>;

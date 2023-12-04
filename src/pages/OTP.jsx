@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import PATHS from "../routes/paths";
 import { toast } from "react-toastify";
-import useTheme from "../hooks/useTheme";
 
 const OTP = function () {
   const { t } = useTranslation();
@@ -16,7 +15,6 @@ const OTP = function () {
   const { state } = useLocation();
 
   const navigate = useNavigate();
-  const { direction } = useTheme();
 
   const { setIsLoggedIn } = useAuth();
 
