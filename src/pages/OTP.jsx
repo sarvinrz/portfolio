@@ -6,6 +6,8 @@ import { useMutation } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import PATHS from "../routes/paths";
+import { toast } from "react-toastify";
+import useTheme from "../hooks/useTheme";
 
 const OTP = function () {
   const { t } = useTranslation();
@@ -14,13 +16,14 @@ const OTP = function () {
   const { state } = useLocation();
 
   const navigate = useNavigate();
+  const { direction } = useTheme();
 
   const { setIsLoggedIn } = useAuth();
 
-  const [seconds, setSeconds] = useState(59);
-  const [minutes, setMinutes] = useState(1);
+  const [seconds, setSeconds] = useState(5);
+  const [minutes, setMinutes] = useState(0);
 
-  const mutation = useMutation({
+  const loginMutation = useMutation({
     mutationFn: (credentials) => {
       return axios.post("https://api.zarindax.ir/v2/auth/login", credentials);
     },
@@ -31,12 +34,39 @@ const OTP = function () {
     },
   });
 
+  const resendCodeMutation = useMutation({
+    mutationFn: (credentials) => {
+      return axios.post("https://api.zarindax.ir/v2/auth/ott", credentials, {});
+    },
+    onSuccess: () => {
+      setSeconds(59);
+      setMinutes(1);
+      toast(t("The code has been resent."), { type: "success" });
+    },
+
+    onError: (error) => {
+      toast(error.response.data.message, { type: "error" });
+    },
+  });
+
   const onSubmitHandler = useCallback(
     (e) => {
       e.preventDefault();
-      mutation.mutate({ otpToken: pin, phoneNumber: state.username });
+      loginMutation.mutate({ otpToken: pin, phoneNumber: state.username });
     },
-    [mutation, pin, state.username]
+    [loginMutation, pin, state?.username]
+  );
+
+  const onClickHandler = useCallback(
+    (e) => {
+      e.preventDefault();
+
+      resendCodeMutation.mutate({
+        recipient: state.username,
+        type: "SMS_OTP",
+      });
+    },
+    [resendCodeMutation, state.username]
   );
 
   useEffect(() => {
@@ -64,6 +94,12 @@ const OTP = function () {
     return () => clearInterval(interval);
   }, [minutes]);
 
+  useEffect(() => {
+    if (!state) {
+      navigate(PATHS.login);
+    }
+  }, [navigate, state]);
+
   return (
     <form
       onSubmit={onSubmitHandler}
@@ -74,22 +110,33 @@ const OTP = function () {
         onChange={setPin}
         type="numeric"
         inputMode="number"
+        style={{
+          direction: "ltr",
+        }}
         inputStyle={{
           background: "#fff",
           borderRadius: "5px",
-          direction: "ltr",
         }}
       />
-      <span className="flex flex-row items-center p-2 rounded-xl space-x-2 rtl:space-x-reverse text-indigo-500 bg-white dark:bg-gray-900 dark:text-white">
-        <p className="text-xl font-light">{minutes}</p>
-        <p className="text-lg font-bold">:</p>
-        <p className="text-xl font-light">{seconds}</p>
-      </span>
+
+      {minutes === 0 && seconds === 0 ? (
+        <button onClick={onClickHandler}>
+          {resendCodeMutation.isLoading ? "..." : t("Resend Code")}
+        </button>
+      ) : (
+        <span className="flex flex-row rtl:flex-row-reverse items-center p-2 w-32 justify-center rounded-xl space-x-2 text-indigo-500 bg-white dark:bg-gray-900  dark:text-white">
+          <p className="text-xl font-light">{minutes}</p>
+          <p className="text-lg font-bold">:</p>
+          <p className="text-xl font-light">
+            {seconds > 10 ? seconds : `0${seconds}`}
+          </p>
+        </span>
+      )}
       <button
         type="submit"
         className="p-4 text-center w-full rounded-xl shadow-sm text-2xl dark:text-white bg-indigo-800 dark:bg-gray-800 dark:hover:bg-gray-900 hover:bg-indigo-900 focus:ring-indigo-500 text-indigo-200"
       >
-        {mutation.isLoading ? "..." : t("Login")}
+        {loginMutation.isLoading ? "..." : t("Login")}
       </button>
     </form>
   );
